@@ -1,0 +1,6 @@
+# Generated reports
+out_*.json
+
+# Optional local test project files
+latex_project/**
+!latex_project/.gitkeep
