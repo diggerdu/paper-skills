@@ -1,10 +1,18 @@
 # Paper Skills
 
-Portable Codex skills for LaTeX paper workflows (toolchain checks, structure parsing, citation validation, and figure/table/section verification).
+Portable Codex skills for LaTeX paper workflows:
 
-## Install in Current Project
-Use the install instructions in [`codex_install.md`](./codex_install.md).
+- toolchain checks
+- structure parsing
+- citation validation
+- figure/table/section verification
 
-You can also pass this file URL directly to Codex:
+## Install with Codex
 
-`https://github.com/diggerdu/paper-skills/blob/main/codex_install.md`
+Tell Codex:
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/diggerdu/paper-skills/main/codex_install.md
+```
+
+Or open the install guide directly: [`codex_install.md`](./codex_install.md)
