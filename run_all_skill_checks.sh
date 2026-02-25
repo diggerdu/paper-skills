@@ -66,8 +66,10 @@ extract_compile="$SKILLS_DIR/tex-toolchain-compile/scripts/extract_compile_issue
 parse_structure="$SKILLS_DIR/tex-latex-structure-parser/scripts/parse_latex_structure.py"
 validate_citations="$SKILLS_DIR/tex-citation-validate-fix/scripts/validate_citations.py"
 verify_targets="$SKILLS_DIR/tex-figure-table-section-fix/scripts/verify_content_targets.py"
+rasterize_pages="$SKILLS_DIR/tex-figure-table-section-fix/scripts/rasterize_pdf_pages.py"
+review_pages="$SKILLS_DIR/tex-figure-table-section-fix/scripts/review_raster_pages.py"
 
-for script in "$check_toolchain" "$extract_compile" "$parse_structure" "$validate_citations" "$verify_targets"; do
+for script in "$check_toolchain" "$extract_compile" "$parse_structure" "$validate_citations" "$verify_targets" "$rasterize_pages" "$review_pages"; do
   [[ -f "$script" ]] || { echo "Error: missing script: $script" >&2; exit 2; }
 done
 
@@ -98,8 +100,14 @@ python "$verify_targets" "${common_args[@]}" --target figures --pretty > "$ROOT_
 echo "[6/7] Table checks"
 python "$verify_targets" "${common_args[@]}" --target tables --pretty > "$ROOT_DIR/out_tables.json"
 
-echo "[7/7] Section checks"
+echo "[7/9] Section checks"
 python "$verify_targets" "${common_args[@]}" --target section --section-name "$SECTION_NAME" --pretty > "$ROOT_DIR/out_section.json"
+
+echo "[8/9] Rasterize pages for visual review"
+python "$rasterize_pages" "${common_args[@]}" --compile-if-missing --pretty > "$ROOT_DIR/out_raster_pages.json"
+
+echo "[9/9] Build page-by-page review template"
+python "$review_pages" --project-root "$PROJECT_ROOT" --manifest "$ROOT_DIR/out_raster_pages.json" --pretty > "$ROOT_DIR/out_page_review.json"
 
 echo "Done. Reports written to:"
 echo "  $ROOT_DIR/out_structure.json"
@@ -107,3 +115,5 @@ echo "  $ROOT_DIR/out_citations.json"
 echo "  $ROOT_DIR/out_figures.json"
 echo "  $ROOT_DIR/out_tables.json"
 echo "  $ROOT_DIR/out_section.json"
+echo "  $ROOT_DIR/out_raster_pages.json"
+echo "  $ROOT_DIR/out_page_review.json"

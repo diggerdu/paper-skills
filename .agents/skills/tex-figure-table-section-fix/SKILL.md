@@ -10,12 +10,16 @@ Use this skill for localized quality remediation. Keep scope tight: one target a
 
 ## Executable Entry Points
 - `scripts/verify_content_targets.py`: verifies one target scope at a time (`figures`, `tables`, or `section`) and outputs JSON issues.
+- `scripts/rasterize_pdf_pages.py`: rasterizes paper PDF into ordered page PNGs for page-by-page visual layout review.
+- `scripts/review_raster_pages.py`: builds per-page scoring templates and aggregate issue summary scaffold from rasterized images.
 
 Example commands:
 ```bash
 python scripts/verify_content_targets.py --project-root . --main-tex main.tex --target figures --pretty
 python scripts/verify_content_targets.py --project-root . --main-tex main.tex --target tables --pretty
 python scripts/verify_content_targets.py --project-root . --main-tex main.tex --target section --section-name Introduction --pretty
+python scripts/rasterize_pdf_pages.py --project-root . --main-tex main.tex --compile-if-missing --pretty
+python scripts/review_raster_pages.py --project-root . --images-dir .agents/renders/page_review --pretty
 ```
 
 ## Project Adaptation
@@ -40,7 +44,11 @@ python scripts/verify_content_targets.py --project-root . --main-tex main.tex --
    - TODO markers and placeholder text
 5. Generate minimal unified diffs with precise context.
 6. Apply through approval flow.
-7. If layout risk remains, run visual verification loop and patch only confirmed issues.
+7. If layout risk remains, run page-by-page visual review:
+   - generate rasterized pages with `scripts/rasterize_pdf_pages.py`
+   - build review scaffold with `scripts/review_raster_pages.py`
+   - inspect PNGs in order and fill per-page score/issues
+   - patch only confirmed, visible issues
 8. Re-analyze and stop when residual issues are acceptable.
 
 ## Inputs and Outputs
